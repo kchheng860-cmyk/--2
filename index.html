@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>កម្មវិធីចាប់ឈ្មោះសិស្ស</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanuman:wght@400;700;900&family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1e3a5f;
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --accent3: #a855f7;
+    --gold: #ffd700;
+    --text: #e2e8f0;
+    --text-muted: #64748b;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --glow: 0 0 20px rgba(0, 212, 255, 0.3);
+    --glow2: 0 0 20px rgba(168, 85, 247, 0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Kantumruy Pro', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(0,212,255,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 90%, rgba(168,85,247,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 50% 50%, rgba(255,107,53,0.04) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Grid pattern */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    padding: 40px 20px 30px;
+    position: relative;
+  }
+
+  .logo-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 0 20px rgba(0,212,255,0.6));
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  header h1 {
+    font-family: 'Hanuman', serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), var(--accent3), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 1px;
+    text-shadow: none;
+    margin-bottom: 8px;
+  }
+
+  header p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 300;
+  }
+
+  .header-line {
+    width: 200px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    margin: 16px auto 0;
+    border-radius: 99px;
+  }
+
+  /* Tab Navigation */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 6px;
+    margin: 24px 0 20px;
+    flex-wrap: wrap;
+  }
+
+  .tab {
+    flex: 1;
+    min-width: 120px;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .tab:hover { color: var(--text); background: var(--surface2); }
+
+  .tab.active {
+    background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(168,85,247,0.2));
+    color: var(--accent);
+    border: 1px solid rgba(0,212,255,0.3);
+    box-shadow: var(--glow);
+  }
+
+  /* Panels */
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn 0.4s ease; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Card */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    opacity: 0.6;
+  }
+
+  .card-title {
+    font-family: 'Hanuman', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Input area */
+  .input-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .input-field {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 13px 18px;
+    color: var(--text);
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+
+  .input-field:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,212,255,0.1);
+  }
+
+  .input-field::placeholder { color: var(--text-muted); }
+
+  /* Buttons */
+  .btn {
+    border: none;
+    border-radius: 12px;
+    padding: 13px 22px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #0099bb);
+    color: #000;
+    box-shadow: 0 4px 15px rgba(0,212,255,0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(0,212,255,0.5);
+  }
+
+  .btn-danger {
+    background: linear-gradient(135deg, var(--danger), #c0392b);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(239,68,68,0.3);
+  }
+
+  .btn-danger:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(239,68,68,0.5); }
+
+  .btn-purple {
+    background: linear-gradient(135deg, var(--accent3), #7c3aed);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(168,85,247,0.3);
+  }
+
+  .btn-purple:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(168,85,247,0.5); }
+
+  .btn-orange {
+    background: linear-gradient(135deg, var(--accent2), #e55a20);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(255,107,53,0.3);
+  }
+
+  .btn-orange:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(255,107,53,0.5); }
+
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+  .btn-ghost:hover { border-color: var(--danger); color: var(--danger); background: rgba(239,68,68,0.05); }
+
+  .btn:active { transform: scale(0.97); }
+
+  /* Student list */
+  .student-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 16px;
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .student-grid::-webkit-scrollbar { width: 4px; }
+  .student-grid::-webkit-scrollbar-track { background: transparent; }
+  .student-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+  .student-chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    transition: all 0.2s ease;
+    animation: chipIn 0.3s ease;
+  }
+
+  @keyframes chipIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .student-chip:hover { border-color: rgba(0,212,255,0.3); background: rgba(0,212,255,0.05); }
+
+  .student-num {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    min-width: 22px;
+    height: 22px;
+    background: var(--bg);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .student-name {
+    flex: 1;
+    font-size: 0.92rem;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .delete-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 2px 5px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .delete-btn:hover { color: var(--danger); background: rgba(239,68,68,0.1); }
+
+  /* Stats */
+  .stats-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .stat-box {
+    flex: 1;
+    min-width: 100px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Hanuman', serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* PICKER - Main feature */
+  .picker-display {
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 20px;
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .picker-display.rolling {
+    border-color: var(--accent);
+    box-shadow: 0 0 30px rgba(0,212,255,0.2), inset 0 0 40px rgba(0,212,255,0.05);
+  }
+
+  .picker-display.winner {
+    border-color: var(--gold);
+    box-shadow: 0 0 40px rgba(255,215,0,0.3), inset 0 0 40px rgba(255,215,0,0.05);
+  }
+
+  .picker-placeholder {
+    color: var(--text-muted);
+    font-size: 1rem;
+  }
+
+  .rolling-name {
+    font-family: 'Hanuman', serif;
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: var(--accent);
+    animation: rollFlicker 0.1s infinite;
+    line-height: 1.2;
+  }
+
+  @keyframes rollFlicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .winner-name {
+    font-family: 'Hanuman', serif;
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 30px rgba(255,215,0,0.6);
+    animation: winnerPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    line-height: 1.2;
+  }
+
+  @keyframes winnerPop {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .winner-badge {
+    font-size: 0.85rem;
+    color: var(--gold);
+    margin-top: 8px;
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
+  }
+
+  /* Confetti particles */
+  .confetti-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .confetti-piece {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    animation: confettiFall 1.5s ease-out forwards;
+  }
+
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(200px) rotate(720deg); opacity: 0; }
+  }
+
+  /* History */
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .history-list::-webkit-scrollbar { width: 4px; }
+  .history-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+  .history-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+  }
+
+  .history-num {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    min-width: 24px;
+  }
+
+  .history-name { flex: 1; color: var(--gold); font-weight: 600; }
+  .history-time { font-size: 0.75rem; color: var(--text-muted); }
+
+  /* Group colors */
+  .group-colors {
+    --g1: #00d4ff; --g2: #a855f7; --g3: #ff6b35;
+    --g4: #22c55e; --g5: #ffd700; --g6: #ec4899;
+    --g7: #f97316; --g8: #14b8a6;
+  }
+
+  .group-card {
+    background: var(--surface2);
+    border-radius: 14px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    animation: chipIn 0.4s ease;
+  }
+
+  .group-header {
+    font-family: 'Hanuman', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .group-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .group-members {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .member-tag {
+    background: var(--bg);
+    border: 1px solid;
+    border-radius: 8px;
+    padding: 5px 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  /* Pair cards */
+  .pairs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .pair-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: chipIn 0.3s ease;
+  }
+
+  .pair-name {
+    flex: 1;
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .pair-vs {
+    font-size: 0.8rem;
+    color: var(--accent3);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* Alerts */
+  .alert {
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .alert-warning {
+    background: rgba(255,215,0,0.08);
+    border: 1px solid rgba(255,215,0,0.3);
+    color: var(--gold);
+  }
+
+  /* Group count input */
+  .number-input-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .number-input-label {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .number-input {
+    width: 80px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    outline: none;
+    transition: all 0.3s;
+  }
+
+  .number-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,212,255,0.1); }
+
+  /* Result area */
+  .result-area {
+    margin-top: 16px;
+  }
+
+  /* Bulk textarea */
+  .bulk-textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: var(--text);
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.95rem;
+    resize: vertical;
+    min-height: 120px;
+    outline: none;
+    transition: all 0.3s;
+    margin-bottom: 10px;
+  }
+
+  .bulk-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,212,255,0.1); }
+  .bulk-textarea::placeholder { color: var(--text-muted); }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+  }
+
+  .empty-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.4; }
+  .empty-text { font-size: 0.95rem; }
+
+  /* Action buttons row */
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    header h1 { font-size: 1.6rem; }
+    .tab { font-size: 0.8rem; padding: 10px 10px; min-width: 90px; }
+    .rolling-name, .winner-name { font-size: 2rem; }
+    .student-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <header>
+    <span class="logo-icon">🎓</span>
+    <h1>កម្មវិធីចាប់ឈ្មោះសិស្ស</h1>
+    <p>Student Name Picker — ចាប់ពូ  · ចែកក្រុម · ចែកដៃគូ</p>
+    <div class="header-line"></div>
+  </header>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="stat-num" id="totalCount">0</div>
+      <div class="stat-label">សិស្សទាំងអស់</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="pickedCount" style="color:var(--gold)">0</div>
+      <div class="stat-label">ចាប់រួចហើយ</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="remainCount" style="color:var(--success)">0</div>
+      <div class="stat-label">នៅសល់</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="sessionCount" style="color:var(--accent3)">0</div>
+      <div class="stat-label">លើកនេះ</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('manage')">📋 គ្រប់គ្រងសិស្ស</button>
+    <button class="tab" onclick="switchTab('pick')">🎲 ចាប់ឈ្មោះ</button>
+    <button class="tab" onclick="switchTab('group')">👥 ចែកក្រុម</button>
+    <button class="tab" onclick="switchTab('pair')">🤝 ចែកដៃគូ</button>
+  </div>
+
+  <!-- PANEL 1: Manage Students -->
+  <div id="panel-manage" class="panel active">
+    <div class="card">
+      <div class="card-title">➕ បន្ថែមឈ្មោះសិស្ស</div>
+      <div class="input-row">
+        <input type="text" class="input-field" id="nameInput" placeholder="វាយឈ្មោះសិស្ស..." onkeydown="if(event.key==='Enter') addStudent()">
+        <button class="btn btn-primary" onclick="addStudent()">➕ បន្ថែម</button>
+      </div>
+      <div style="margin-top: 14px;">
+        <div class="card-title" style="font-size:0.95rem; margin-bottom: 10px;">📥 បន្ថែមច្រើនបន្ទាត់ក្នុងម្តង</div>
+        <textarea class="bulk-textarea" id="bulkInput" placeholder="វាយឈ្មោះសិស្សម្នាក់ ១ បន្ទាត់&#10;ឧ.&#10;សុខ ដារ៉ា&#10;ចាន់ នីតា&#10;លី ស្រីម៉ម"></textarea>
+        <button class="btn btn-ghost" onclick="addBulk()">📥 បន្ថែមទាំងអស់</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+        <div class="card-title" style="margin-bottom:0">📋 បញ្ជីឈ្មោះសិស្ស (<span id="listCount">0</span> នាក់)</div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-ghost" style="padding:8px 14px; font-size:0.85rem;" onclick="shuffleStudents()">🔀 ច្របល់</button>
+          <button class="btn btn-ghost" style="padding:8px 14px; font-size:0.85rem; border-color:var(--danger);" onclick="clearAll()">🗑️ លុបទាំងអស់</button>
+        </div>
+      </div>
+      <div id="studentGrid" class="student-grid">
+        <div class="empty-state" style="grid-column:1/-1;">
+          <div class="empty-icon">🎒</div>
+          <div class="empty-text">មិនទាន់មានឈ្មោះសិស្សនៅឡើយ</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: Pick -->
+  <div id="panel-pick" class="panel">
+    <div class="card">
+      <div class="card-title">🎲 ចាប់ឈ្មោះសិស្ស</div>
+      
+      <div class="picker-display" id="pickerDisplay">
+        <div class="picker-placeholder">
+          <div style="font-size:2.5rem; margin-bottom:12px;">🎰</div>
+          <div>ចុច "ចាប់ឈ្មោះ" ដើម្បីចាប់ពូ</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" style="flex:1" onclick="startPick()">🎲 ចាប់ឈ្មោះ</button>
+        <button class="btn btn-purple" onclick="resetPicked()">🔄 ចាប់ម្តងទៀត</button>
+      </div>
+
+      <!-- Options -->
+      <div style="margin-top:14px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+        <label style="display:flex; align-items:center; gap:8px; font-size:0.9rem; color:var(--text-muted); cursor:pointer;">
+          <input type="checkbox" id="noRepeat" checked style="accent-color:var(--accent); width:16px; height:16px;">
+          មិនដូចគ្នា
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; font-size:0.9rem; color:var(--text-muted); cursor:pointer;">
+          <input type="checkbox" id="showConfetti" checked style="accent-color:var(--accent); width:16px; height:16px;">
+          បង្ហាញផ្កាយ
+        </label>
+      </div>
+    </div>
+
+    <!-- History -->
+    <div class="card">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+        <div class="card-title" style="margin-bottom:0">📜 ប្រវត្តិចាប់ ({<span id="historyCount">0</span>})</div>
+        <button class="btn btn-ghost" style="padding:7px 12px; font-size:0.82rem;" onclick="clearHistory()">🗑️ លុប</button>
+      </div>
+      <div id="historyList" class="history-list">
+        <div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <div class="empty-text">មិនទាន់ចាប់បានសិស្សណានៅឡើយ</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 3: Group -->
+  <div id="panel-group" class="panel">
+    <div class="card">
+      <div class="card-title">👥 ចែកក្រុម</div>
+      <div class="number-input-row">
+        <span class="number-input-label">ចែកជា</span>
+        <input type="number" class="number-input" id="groupCount" value="3" min="2" max="20">
+        <span class="number-input-label">ក្រុម</span>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-purple" onclick="makeGroups()">👥 ចែកក្រុម</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('groupResult').innerHTML = ''">🗑️ លុប</button>
+      </div>
+    </div>
+
+    <div id="groupResult" class="result-area"></div>
+  </div>
+
+  <!-- PANEL 4: Pair -->
+  <div id="panel-pair" class="panel">
+    <div class="card">
+      <div class="card-title">🤝 ចែកដៃគូ</div>
+      <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:16px;">
+        ចែកសិស្សជាគូៗ (២ នាក់ក្នុងមួយគូ) ។ ប្រសិនបើសិស្សមានចំនួនសេស នឹងបង្កើតក្រុម ៣ នាក់
+      </p>
+      <div class="btn-row">
+        <button class="btn btn-orange" onclick="makePairs()">🤝 ចែកដៃគូ</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('pairResult').innerHTML = ''">🗑️ លុប</button>
+      </div>
+    </div>
+
+    <div id="pairResult" class="result-area"></div>
+  </div>
+
+</div>
+
+<script>
+  // ====================== STATE ======================
+  let students = [];
+  let pickedHistory = [];
+  let pickedSet = new Set();
+  let isRolling = false;
+  let rollInterval = null;
+  let sessionCount = 0;
+
+  const GROUP_COLORS = [
+    { color: '#00d4ff', bg: 'rgba(0,212,255,0.12)', border: 'rgba(0,212,255,0.4)' },
+    { color: '#a855f7', bg: 'rgba(168,85,247,0.12)', border: 'rgba(168,85,247,0.4)' },
+    { color: '#ff6b35', bg: 'rgba(255,107,53,0.12)', border: 'rgba(255,107,53,0.4)' },
+    { color: '#22c55e', bg: 'rgba(34,197,94,0.12)', border: 'rgba(34,197,94,0.4)' },
+    { color: '#ffd700', bg: 'rgba(255,215,0,0.12)', border: 'rgba(255,215,0,0.4)' },
+    { color: '#ec4899', bg: 'rgba(236,72,153,0.12)', border: 'rgba(236,72,153,0.4)' },
+    { color: '#f97316', bg: 'rgba(249,115,22,0.12)', border: 'rgba(249,115,22,0.4)' },
+    { color: '#14b8a6', bg: 'rgba(20,184,166,0.12)', border: 'rgba(20,184,166,0.4)' },
+    { color: '#f43f5e', bg: 'rgba(244,63,94,0.12)', border: 'rgba(244,63,94,0.4)' },
+    { color: '#84cc16', bg: 'rgba(132,204,22,0.12)', border: 'rgba(132,204,22,0.4)' },
+  ];
+
+  // ====================== TABS ======================
+  function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`#panel-${tab}`).classList.add('active');
+    event.target.classList.add('active');
+    if (isRolling) stopRoll();
+  }
+
+  // ====================== STUDENTS ======================
+  function addStudent() {
+    const input = document.getElementById('nameInput');
+    const name = input.value.trim();
+    if (!name) return;
+    students.push(name);
+    input.value = '';
+    input.focus();
+    renderStudents();
+    updateStats();
+  }
+
+  function addBulk() {
+    const bulk = document.getElementById('bulkInput').value.trim();
+    if (!bulk) return;
+    const names = bulk.split('\n').map(n => n.trim()).filter(n => n.length > 0);
+    students.push(...names);
+    document.getElementById('bulkInput').value = '';
+    renderStudents();
+    updateStats();
+  }
+
+  function deleteStudent(index) {
+    students.splice(index, 1);
+    renderStudents();
+    updateStats();
+  }
+
+  function clearAll() {
+    if (students.length === 0) return;
+    if (!confirm('តើចង់លុបសិស្សទាំងអស់ (' + students.length + ' នាក់) មែនទេ?')) return;
+    students = [];
+    pickedSet.clear();
+    renderStudents();
+    updateStats();
+  }
+
+  function shuffleStudents() {
+    for (let i = students.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [students[i], students[j]] = [students[j], students[i]];
+    }
+    renderStudents();
+  }
+
+  function renderStudents() {
+    const grid = document.getElementById('studentGrid');
+    document.getElementById('listCount').textContent = students.length;
+    if (students.length === 0) {
+      grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">🎒</div><div class="empty-text">មិនទាន់មានឈ្មោះសិស្សនៅឡើយ</div></div>';
+      return;
+    }
+    grid.innerHTML = students.map((s, i) => `
+      <div class="student-chip">
+        <span class="student-num">${i+1}</span>
+        <span class="student-name" title="${s}">${s}</span>
+        <button class="delete-btn" onclick="deleteStudent(${i})" title="លុប">✕</button>
+      </div>
+    `).join('');
+  }
+
+  function updateStats() {
+    document.getElementById('totalCount').textContent = students.length;
+    document.getElementById('pickedCount').textContent = pickedSet.size;
+    const remain = students.filter(s => !pickedSet.has(s)).length;
+    document.getElementById('remainCount').textContent = remain;
+    document.getElementById('sessionCount').textContent = sessionCount;
+  }
+
+  // ====================== PICKER ======================
+  function startPick() {
+    if (isRolling) return;
+    if (students.length === 0) { alert('សូមបន្ថែមឈ្មោះសិស្សជាមុនសិន!'); return; }
+    
+    const noRepeat = document.getElementById('noRepeat').checked;
+    let pool = noRepeat ? students.filter(s => !pickedSet.has(s)) : students;
+    
+    if (pool.length === 0) {
+      if (noRepeat && confirm('សិស្សទាំងអស់ត្រូវបានចាប់រួចហើយ! ចង់ចាប់ម្តងទៀតទេ?')) {
+        pickedSet.clear();
+        pool = [...students];
+        updateStats();
+      } else return;
+    }
+
+    isRolling = true;
+    const display = document.getElementById('pickerDisplay');
+    display.className = 'picker-display rolling';
+    display.innerHTML = '<div class="rolling-name">...</div>';
+    
+    let count = 0;
+    const maxRolls = 20 + Math.floor(Math.random() * 15);
+    let delay = 60;
+    
+    function roll() {
+      const rnd = pool[Math.floor(Math.random() * pool.length)];
+      display.innerHTML = `<div class="rolling-name">${rnd}</div>`;
+      count++;
+      
+      if (count >= maxRolls) {
+        clearInterval(rollInterval);
+        const winner = pool[Math.floor(Math.random() * pool.length)];
+        showWinner(winner, pool, noRepeat);
+      } else {
+        if (count > maxRolls * 0.6) delay = Math.min(delay * 1.12, 300);
+        rollInterval = setTimeout(roll, delay);
+      }
+    }
+    rollInterval = setTimeout(roll, delay);
+  }
+
+  function showWinner(name, pool, noRepeat) {
+    isRolling = false;
+    if (noRepeat) pickedSet.add(name);
+    sessionCount++;
+    
+    const now = new Date();
+    const timeStr = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0') + ':' + now.getSeconds().toString().padStart(2,'0');
+    pickedHistory.unshift({ name, time: timeStr, num: sessionCount });
+    
+    const display = document.getElementById('pickerDisplay');
+    display.className = 'picker-display winner';
+    
+    let confettiHTML = '';
+    if (document.getElementById('showConfetti').checked) {
+      const colors = ['#00d4ff','#a855f7','#ff6b35','#ffd700','#22c55e','#ec4899'];
+      for (let i = 0; i < 20; i++) {
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const left = Math.random() * 100;
+        const delay = Math.random() * 0.5;
+        const size = 6 + Math.random() * 8;
+        confettiHTML += `<div class="confetti-piece" style="left:${left}%;background:${color};width:${size}px;height:${size}px;animation-delay:${delay}s;border-radius:${Math.random()>0.5?'50%':'2px'}"></div>`;
+      }
+    }
+    
+    display.innerHTML = `
+      <div class="confetti-container">${confettiHTML}</div>
+      <div class="winner-name">${name}</div>
+      <div class="winner-badge">🌟 ត្រូវបានចាប់ 🌟</div>
+    `;
+    
+    updateStats();
+    renderHistory();
+  }
+
+  function stopRoll() {
+    if (rollInterval) clearTimeout(rollInterval);
+    isRolling = false;
+  }
+
+  function resetPicked() {
+    pickedSet.clear();
+    sessionCount = 0;
+    const display = document.getElementById('pickerDisplay');
+    display.className = 'picker-display';
+    display.innerHTML = '<div class="picker-placeholder"><div style="font-size:2.5rem;margin-bottom:12px;">🎰</div><div>ចុច "ចាប់ឈ្មោះ" ដើម្បីចាប់ពូ</div></div>';
+    updateStats();
+  }
+
+  function renderHistory() {
+    const list = document.getElementById('historyList');
+    document.getElementById('historyCount').textContent = pickedHistory.length;
+    if (pickedHistory.length === 0) {
+      list.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">មិនទាន់ចាប់បានសិស្សណានៅឡើយ</div></div>';
+      return;
+    }
+    list.innerHTML = pickedHistory.map((h, i) => `
+      <div class="history-item">
+        <span class="history-num">#${h.num}</span>
+        <span style="font-size:1rem;">🏆</span>
+        <span class="history-name">${h.name}</span>
+        <span class="history-time">${h.time}</span>
+      </div>
+    `).join('');
+  }
+
+  function clearHistory() {
+    pickedHistory = [];
+    renderHistory();
+  }
+
+  // ====================== GROUPS ======================
+  function makeGroups() {
+    if (students.length < 2) { alert('ត្រូវការសិស្សយ៉ាងតិច ២ នាក់!'); return; }
+    const n = parseInt(document.getElementById('groupCount').value);
+    if (n < 2 || n > students.length) { alert('ចំនួនក្រុមមិនត្រឹមត្រូវ!'); return; }
+    
+    const shuffled = [...students].sort(() => Math.random() - 0.5);
+    const groups = Array.from({length: n}, () => []);
+    shuffled.forEach((s, i) => groups[i % n].push(s));
+    
+    const result = document.getElementById('groupResult');
+    result.innerHTML = `
+      <div class="card">
+        <div class="card-title">✅ ចែកជា ${n} ក្រុម</div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:12px;">
+          ${groups.map((g, gi) => {
+            const c = GROUP_COLORS[gi % GROUP_COLORS.length];
+            return `
+              <div class="group-card" style="border-color:${c.border}; background: var(--surface2);">
+                <div class="group-header" style="color:${c.color}">
+                  <div class="group-dot" style="background:${c.color}"></div>
+                  ក្រុមទី ${gi + 1} <span style="font-size:0.8rem; font-weight:400; color:var(--text-muted)">(${g.length} នាក់)</span>
+                </div>
+                <div class="group-members">
+                  ${g.map(m => `<span class="member-tag" style="color:${c.color}; border-color:${c.border}; background:${c.bg}">${m}</span>`).join('')}
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  // ====================== PAIRS ======================
+  function makePairs() {
+    if (students.length < 2) { alert('ត្រូវការសិស្សយ៉ាងតិច ២ នាក់!'); return; }
+    
+    const shuffled = [...students].sort(() => Math.random() - 0.5);
+    const pairs = [];
+    let i = 0;
+    while (i < shuffled.length) {
+      if (i + 2 === shuffled.length - 1 || (i + 1 === shuffled.length - 1 && shuffled.length % 2 !== 0)) {
+        // odd student remaining - make triple
+        pairs.push(shuffled.slice(i, i + 3));
+        i += 3;
+      } else {
+        pairs.push(shuffled.slice(i, i + 2));
+        i += 2;
+      }
+    }
+
+    const result = document.getElementById('pairResult');
+    result.innerHTML = `
+      <div class="card">
+        <div class="card-title">✅ ចែកជា ${pairs.length} គូ</div>
+        <div class="pairs-grid">
+          ${pairs.map((p, pi) => {
+            const c = GROUP_COLORS[pi % GROUP_COLORS.length];
+            if (p.length === 2) {
+              return `
+                <div class="pair-card" style="border-color:${c.border}">
+                  <span style="font-size:0.75rem; color:${c.color}; font-weight:700; min-width:24px">គូ${pi+1}</span>
+                  <span class="pair-name" style="color:${c.color}">${p[0]}</span>
+                  <span class="pair-vs">🤝</span>
+                  <span class="pair-name" style="color:${c.color}">${p[1]}</span>
+                </div>
+              `;
+            } else {
+              return `
+                <div class="pair-card" style="border-color:${c.border}; flex-direction:column; align-items:flex-start">
+                  <div style="font-size:0.75rem; color:${c.color}; font-weight:700; margin-bottom:8px">ក្រុម ${pi+1} (3 នាក់)</div>
+                  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    ${p.map(m => `<span class="member-tag" style="color:${c.color}; border-color:${c.border}; background:${c.bg}">${m}</span>`).join('')}
+                  </div>
+                </div>
+              `;
+            }
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  // ====================== INIT ======================
+  // Sample students
+  const sampleStudents = [
+    'សុខ ដារ៉ា', 'ចាន់ នីតា', 'លី ស្រីម៉ម', 'ហេង វិចិត្រ', 'ទូច សុភា',
+    'ស៊ិន ម៉ករា', 'ភួង ចន្ទ', 'នូ សុខា', 'ម៉ម ពិសី', 'ហ៊ួត ចន្ថា'
+  ];
+  students = [...sampleStudents];
+  renderStudents();
+  updateStats();
+</script>
+</body>
+</html>
